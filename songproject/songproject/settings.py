@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'song_models.apps.SongModelsConfig',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +76,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'songproject.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES':(
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

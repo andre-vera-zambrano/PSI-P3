@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
         self.stdout.write('Creando usuarios y superusuario...')
 
-        superuser = User.objects.create_superuser(username='alumnnodb', password='alumnodb')
+        superuser = User.objects.create_superuser(username='alumnodb', password='alumnodb')
 
         u1 = User.objects.create(username = 'pedro', password = '123') 
         u2 = User.objects.create(username = 'dani', password = '123') 

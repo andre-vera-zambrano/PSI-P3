@@ -60,7 +60,7 @@ class Song(models.Model):
     number_times_played = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.id} - {self.title}'
+        return f'{self.artist} - {self.title}'
     
     class Meta:
         ordering = ['title']
@@ -73,7 +73,7 @@ class SongUser(models.Model):
     wrong_guesses = models.IntegerField(default=0)    
 
     def __str__(self):
-        return f'{self.id} ({self.user.username}) - {self.song}'
+        return f'{self.user.username} - {self.song.title}'
     
     class Meta:
         ordering = ['-played_at', 'user']

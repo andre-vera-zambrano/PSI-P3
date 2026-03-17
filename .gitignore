@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Tmp files for testing in media
+songproject/media/test_*
+songproject/media/cover_*
