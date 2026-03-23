@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # Tmp files for testing in media
-songproject/media/test_*
+songproject/media/test*
 songproject/media/cover_*
