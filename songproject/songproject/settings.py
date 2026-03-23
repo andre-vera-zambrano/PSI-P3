@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,13 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z+in0m2(1o@3^&q#cp_@5*i4f!#f1rsq!&vp5nuskx!iysi+_9'
+# SECRET_KEY = 'django-insecure-z+in0m2(1o@3^&q#cp_@5*i4f!#f1rsq!&vp5nuskx!iysi+_9'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-z+in0m2(1o@3^&q#cp_@5*i4f!#f1rsq!&vp5nuskx!iysi+_9')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+
+DEBUG = os.environ.get('DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = []
 
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -49,6 +56,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -95,8 +103,19 @@ DATABASES = {
     }
 }
 
-db_from_env = dj_database_url.config(default='postgres://alumnodb:alumnodb@localhost:5432/songdatabase', conn_max_age=500) 
-DATABASES['default'].update(db_from_env) 
+POSTGRESQL_URL = os.environ.get('POSTGRESQL_URL', 'postgres://alumnodb:alumnodb@localhost:5432/songdatabase')
+NEON_URL = os.environ.get('NEON_URL')
+
+if 'TESTING' in os.environ:
+    DATABASES['default'] = dj_database_url.config(
+        default=POSTGRESQL_URL,
+        conn_max_age=500
+    )
+else:
+    DATABASES['default'] = dj_database_url.config(
+        default=NEON_URL,
+        conn_max_age=500
+    )
 
 
 # Password validation
@@ -134,6 +153,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestSta3cFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
